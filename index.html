@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Library Book Finder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <button onclick="window.location.href='index.html'">Home</button>
+            </div>
+            <div class="nav-center">
+                <!-- Category Links -->
+                <a href="biography.html">Biography</a>
+                <a href="business.html">Business</a>
+                <a href="children.html">Children</a>
+                <a href="fiction.html">Fiction</a>
+                <a href="history.html">History</a>
+                <a href="mystery.html">Mystery</a>
+                <a href="science-fiction.html">Science Fiction</a>
+                <a href="technology.html">Technology</a>
+            </div>
+            <div class="nav-right">
+                <button onclick="openRegistration()">Register</button>
+                <button onclick="openLogin()">Login</button>
+            </div>
+        </nav>
+
+        <header class="hero-section">
+            <h1>Discover Your Next Favorite Book</h1>
+            <p>Explore, search, and discover the world of books at your fingertips.</p>
+        </header>
+
+        <!-- Search Section -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search for books...">
+            <button onclick="searchBooks()">Search</button>
+        </div>
+
+        <!-- Top Rated Books Section -->
+        <section id="top-rated-section" class="top-rated">
+            <h2>Top Rated Books</h2>
+            <div id="top-rated-books" class="books-list">
+                <!-- Dynamic content will be added here -->
+            </div>
+        </section>
+
+        <!-- Books List Section -->
+        <div id="books-list" class="books-list"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <a href="https://facebook.com/ataheristiackridoy" target="_blank" class="footer-icon">
+                <img src="images/facebook-icon.png" alt="Facebook Icon">
+            </a>
+            <a href="https://t.me/ataherridoy" target="_blank" class="footer-icon">
+                <img src="images/telegram-icon.png" alt="Telegram Icon">
+            </a>
+            <a href="mailto:ather15-13414@diu.edu.bd" class="footer-icon">
+                <img src="images/email-icon.png" alt="Email Icon">
+            </a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        async function fetchBiographyBooks() {
+            try {
+                const response = await fetch('https://www.googleapis.com/books/v1/volumes?q=biography');
+                const data = await response.json();
+                displayBooks(data.items);
+            } catch (error) {
+                console.error('Error fetching biography books:', error);
+            }
+        }
+
+        function displayBooks(books) {
+            const booksList = document.getElementById('books-list');
+            booksList.innerHTML = '';
+
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+
+                const coverImage = book.volumeInfo.imageLinks ? `<img src="${book.volumeInfo.imageLinks.thumbnail}" alt="Book Cover">` : '';
+                const title = book.volumeInfo.title || 'No title available';
+                const author = book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown author';
+                const description = book.volumeInfo.description ? book.volumeInfo.description.slice(0, 100) + '...' : 'No description available';
+
+                bookCard.innerHTML = `
+                    ${coverImage}
+                    <h3>${title}</h3>
+                    <p>Author: ${author}</p>
+                    <p>${description}</p>
+                `;
+
+                booksList.appendChild(bookCard);
+            });
+        }
+</body>
+</html>

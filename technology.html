@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechnologyBooks</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <button onclick="window.location.href='index.html'">Home</button>
+            </div>
+            <div class="nav-center">
+                <!-- Category Links directly added to the navbar -->
+                <a href="biography.html">Biography</a>
+                <a href="business.html">Business</a>
+                <a href="children.html">Children</a>
+                <a href="fiction.html">Fiction</a>
+                <a href="history.html">History</a>
+                <a href="mystery.html">Mystery</a>
+                <a href="science-fiction.html">Science Fiction</a>
+                <a href="technology.html">Technology</a>
+            </div>
+            <div class="nav-right">
+                <button onclick="openRegistration()">Register</button>
+                <button onclick="openLogin()">Login</button>
+            </div>
+        </nav>
+
+        <header>
+           
+            <p>Explore an inspiring collection of biographies from authors worldwide.</p>
+        </header>
+
+        <!-- Books Section -->
+        <section id="biography-books">
+            <h2>Top technologyBooks</h2>
+            <div id="books-list" class="books-list"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        async function fetchBiographyBooks() {
+            try {
+                const response = await fetch('https://www.googleapis.com/books/v1/volumes?q=technology');
+                const data = await response.json();
+                displayBooks(data.items);
+            } catch (error) {
+                console.error('Error fetching technologybooks:', error);
+            }
+        }
+
+        function displayBooks(books) {
+            const booksList = document.getElementById('books-list');
+            booksList.innerHTML = '';
+
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+
+                const coverImage = book.volumeInfo.imageLinks ? `<img src="${book.volumeInfo.imageLinks.thumbnail}" alt="Book Cover">` : '';
+                const title = book.volumeInfo.title || 'No title available';
+                const author = book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown author';
+                const description = book.volumeInfo.description ? book.volumeInfo.description.slice(0, 100) + '...' : 'No description available';
+
+                bookCard.innerHTML = `
+                    ${coverImage}
+                    <h3>${title}</h3>
+                    <p>Author: ${author}</p>
+                    <p>${description}</p>
+                `;
+
+                booksList.appendChild(bookCard);
+            });
+        }
+
+        // Fetch and display technologybooks on page load
+        fetchBiographyBooks();
+    </script>
+</body>
+</html>
